@@ -1,45 +1,55 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "evanschleret/lara-mjml",
+    "description": "Just a service provider for Spatie's MJML wrapper",
     "keywords": [
-        ":vendor_name",
-        ":package_slug"
+        "EvanSchleret",
+        "lara-mjml"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/evanschleret/lara-mjml",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
-            "role": "Developer"
+            "name": "Evan Schleret",
+            "email": "evan@schleret.ch"
         }
     ],
     "require": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "illuminate/config": "^11.16",
+        "illuminate/support": "^11.16",
+        "spatie/mjml-php": "^1.2"
     },
     "require-dev": {
-        :require_dev_testing,
-        :require_dev_codestyle,
+        "pestphp/pest": "^2.20",
+        "laravel/pint": "^1.0",
         "spatie/ray": "^1.28"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "EvanSchleret\\LaraMjml\\Providers\\LaraMjmlServiceProvider"
+            ]
+        }
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src"
+            "EvanSchleret\\LaraMjml\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "EvanSchleret\\LaraMjml\\Tests\\": "tests"
         }
     },
     "scripts": {
-        :scripts_testing,
-        :scripts_codestyle
+        "test": "vendor/bin/pest",
+            "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            :plugins_testing,
+            "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
         }
     },
