@@ -8,14 +8,6 @@ return [
      */
     'binary_path' => env('MJML_NODE_PATH', null),
 
-
-    /*
-     * The path to the working directory
-     *
-     * string
-     */
-    'working_directory' => env('LARA_MJML_WORKING_DIRECTORY', base_path('resources/views')),
-
     /*
      * Beautify the output
      *

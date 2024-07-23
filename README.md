@@ -23,7 +23,6 @@ You can use this package by simply calling the `view` helper function with the n
 You can set the path to the mjml binary in your `.env` file.
 
 ```env
-LARA_MJML_WORKING_DIRECTORY=resources/views
 MJML_NODE_PATH=null
 LARA_MJML_BEAUTIFY=false
 LARA_MJML_MINIFY=true

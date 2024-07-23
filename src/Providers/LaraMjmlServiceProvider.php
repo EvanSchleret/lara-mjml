@@ -33,7 +33,6 @@ class LaraMjmlServiceProvider extends ServiceProvider
                     ->beautify(Config::get('laramjml.beautify'))
                     ->minify(Config::get('laramjml.minify'))
                     ->keepComments(Config::get('laramjml.keep_comments'))
-                    ->workingDirectory(Config::get('laramjml.working_directory'))
                     ->convert($view, ...Config::get('laramjml.options'))
                     ->html();
             }
