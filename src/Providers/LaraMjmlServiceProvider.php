@@ -17,7 +17,6 @@ class LaraMjmlServiceProvider extends ServiceProvider
         $this->mergeConfig();
     }
 
-
     /**
      * Bootstrap services.
      */
@@ -43,7 +42,6 @@ class LaraMjmlServiceProvider extends ServiceProvider
 
     /**
      * Merge the configuration.
-     * @return void
      */
     private function mergeConfig(): void
     {
@@ -54,7 +52,6 @@ class LaraMjmlServiceProvider extends ServiceProvider
 
     /**
      * Publish the configuration.
-     * @return void
      */
     private function publishConfig(): void
     {
