@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "illuminate/config": "^11.16",
         "illuminate/support": "^11.16",
         "spatie/mjml-php": "^1.2"
