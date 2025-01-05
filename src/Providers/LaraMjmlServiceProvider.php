@@ -2,9 +2,9 @@
 
 namespace EvanSchleret\LaraMjml\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
 use EvanSchleret\LaraMjml\Views\Engines\MJMLEngine;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class LaraMjmlServiceProvider extends ServiceProvider
 {
@@ -26,7 +26,7 @@ class LaraMjmlServiceProvider extends ServiceProvider
         ]);
 
         View::getEngineResolver()->register('mjml', function () {
-            return new MJMLEngine();
+            return new MJMLEngine;
         });
 
         View::addExtension('mjml.blade.php', 'mjml');
