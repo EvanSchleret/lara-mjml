@@ -18,6 +18,8 @@ composer require evanschleret/lara-mjml
 
 You can use this package by simply calling the `view` helper function with the name of your mjml template.
 
+Your views must be names as `*.mjml.blade.php` to be compiled by this package.
+
 ### Environment Variables and Configuration
 
 You can set the path to the mjml binary in your `.env` file.

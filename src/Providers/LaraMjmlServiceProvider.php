@@ -2,10 +2,9 @@
 
 namespace EvanSchleret\LaraMjml\Providers;
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Config;
+use EvanSchleret\LaraMjml\Views\Engines\MJMLEngine;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Spatie\Mjml\Mjml;
 
 class LaraMjmlServiceProvider extends ServiceProvider
 {
@@ -26,18 +25,11 @@ class LaraMjmlServiceProvider extends ServiceProvider
             __DIR__.'/../../config/laramjml.php' => config_path('laramjml.php'),
         ]);
 
-        Blade::extend(function ($view) {
-            if (stripos($view, '<mjml>') !== false) {
-                return Mjml::new()
-                    ->beautify(Config::get('laramjml.beautify'))
-                    ->minify(Config::get('laramjml.minify'))
-                    ->keepComments(Config::get('laramjml.keep_comments'))
-                    ->convert($view, ...Config::get('laramjml.options'))
-                    ->html();
-            }
-
-            return $view;
+        View::getEngineResolver()->register('mjml', function () {
+            return new MJMLEngine;
         });
+
+        View::addExtension('mjml.blade.php', 'mjml');
     }
 
     /**
