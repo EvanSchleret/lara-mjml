@@ -20,7 +20,7 @@
         "spatie/mjml-php": "^1.2"
     },
     "require-dev": {
-        "pestphp/pest": "^2.20",
+        "pestphp/pest": "^3.6",
         "laravel/pint": "^1.0",
         "spatie/ray": "^1.28"
     },
