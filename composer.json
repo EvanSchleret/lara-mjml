@@ -14,13 +14,13 @@
         }
     ],
     "require": {
-        "php": "^8.2",
-        "illuminate/config": "^11.16",
-        "illuminate/support": "^11.16",
-        "spatie/mjml-php": "^1.2"
+        "php": "^8.2 || ^8.4",
+        "illuminate/config": "^11.16 || ^12.0",
+        "illuminate/support": "^11.16 || ^12.0",
+        "spatie/mjml-php": "^1.2.3"
     },
     "require-dev": {
-        "pestphp/pest": "^2.20",
+        "pestphp/pest": "^2.20 || ^3.0",
         "laravel/pint": "^1.0",
         "spatie/ray": "^1.28"
     },
