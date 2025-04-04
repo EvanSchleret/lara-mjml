@@ -2,6 +2,14 @@
 
 All notable changes to `lara-mjml` will be documented in this file.
 
+## v0.2.2 - 2025-04-04
+
+### What's Changed
+
+* doc: add a new mjml installation step in the documentation by @EvanSchleret in https://github.com/EvanSchleret/lara-mjml/pull/13
+
+**Full Changelog**: https://github.com/EvanSchleret/lara-mjml/compare/v0.2.1...v0.2.2
+
 ## v0.2.1 - 2025-03-14
 
 ### What's Changed
