@@ -26,7 +26,10 @@ class LaraMjmlServiceProvider extends ServiceProvider
         ]);
 
         View::getEngineResolver()->register('mjml', function () {
-            return new MJMLEngine;
+            return new MJMLEngine(
+                View::getEngineResolver()->resolve('blade'),
+                $this->app['config'],
+            );
         });
 
         View::addExtension('mjml.blade.php', 'mjml');
