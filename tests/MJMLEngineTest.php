@@ -74,8 +74,7 @@ class FakeBladeEngine implements ViewEngine
      */
     public function __construct(
         private $renderer,
-    ) {
-    }
+    ) {}
 
     public function get($path, array $data = [])
     {
