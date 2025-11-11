@@ -2,6 +2,15 @@
 
 All notable changes to `lara-mjml` will be documented in this file.
 
+## v0.3 - 2025-11-11
+
+### What's Changed
+
+* Fix mailable classes usage by @EvanSchleret in https://github.com/EvanSchleret/lara-mjml/pull/15
+* Changed README.md to make it clearer by @EvanSchleret
+
+**Full Changelog**: https://github.com/EvanSchleret/lara-mjml/compare/v0.2.2...v0.3
+
 ## v0.2.2 - 2025-04-04
 
 ### What's Changed
