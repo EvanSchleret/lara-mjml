@@ -2,6 +2,39 @@
 
 All notable changes to `lara-mjml` will be documented in this file.
 
+## v1.0.0 - 2026-03-25
+
+### LaraMJML v1.0.0
+
+#### Highlights
+
+- Added a new `laramjml:validate` Artisan command to validate MJML Blade templates with CI-friendly exit codes
+- Added Laravel 13 support and removed Laravel 11 support
+- Refreshed README documentation
+
+#### Added
+
+- `php artisan laramjml:validate`
+- New validation support classes:
+  - `MjmlTemplateValidator`
+  - `MjmlTemplateValidationResult`
+  
+- New tests for:
+  - `MJMLEngine` behavior
+  - MJML validation service behavior
+  
+
+#### Breaking Changes
+
+- Dropped support for Laravel 11
+
+#### Upgrade Notes
+
+- If your app is still on Laravel 11, upgrade to Laravel 12+ before using this release
+- You can now add MJML checks to CI with:
+  - `php artisan laramjml:validate`
+  
+
 ## v0.3 - 2025-11-11
 
 ### What's Changed
