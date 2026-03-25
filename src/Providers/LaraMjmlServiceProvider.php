@@ -2,6 +2,7 @@
 
 namespace EvanSchleret\LaraMjml\Providers;
 
+use EvanSchleret\LaraMjml\Commands\ValidateMjmlCommand;
 use EvanSchleret\LaraMjml\Views\Engines\MJMLEngine;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +25,12 @@ class LaraMjmlServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../config/laramjml.php' => config_path('laramjml.php'),
         ]);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ValidateMjmlCommand::class,
+            ]);
+        }
 
         View::getEngineResolver()->register('mjml', function () {
             return new MJMLEngine(

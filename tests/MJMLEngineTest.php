@@ -62,6 +62,47 @@ it('respects mjml configuration options', function () {
     expect(getenv('MJML_NODE_PATH'))->toBe('/custom/node/bin');
 });
 
+it('falls back to empty options when laramjml options is not an array', function () {
+    $this->config->set('laramjml.options', 'invalid-options');
+
+    $bladeEngine = new FakeBladeEngine(fn () => '<mjml></mjml>');
+    $fakeMjml = new FakeMjml('<html />');
+
+    $engine = new MJMLEngine($bladeEngine, $this->config, fn () => $fakeMjml);
+
+    $engine->get('path', []);
+
+    expect($fakeMjml->convertCalls[0]['options'])->toBe([]);
+});
+
+it('does not set MJML_NODE_PATH when binary path is an empty string', function () {
+    putenv('MJML_NODE_PATH=/existing/path');
+    $this->config->set('laramjml.binary_path', '');
+
+    $bladeEngine = new FakeBladeEngine(fn () => '<mjml></mjml>');
+    $fakeMjml = new FakeMjml('<html />');
+
+    $engine = new MJMLEngine($bladeEngine, $this->config, fn () => $fakeMjml);
+
+    $engine->get('path', []);
+
+    expect(getenv('MJML_NODE_PATH'))->toBe('/existing/path');
+});
+
+it('does not set MJML_NODE_PATH when binary path is not a string', function () {
+    putenv('MJML_NODE_PATH=/existing/path');
+    $this->config->set('laramjml.binary_path', true);
+
+    $bladeEngine = new FakeBladeEngine(fn () => '<mjml></mjml>');
+    $fakeMjml = new FakeMjml('<html />');
+
+    $engine = new MJMLEngine($bladeEngine, $this->config, fn () => $fakeMjml);
+
+    $engine->get('path', []);
+
+    expect(getenv('MJML_NODE_PATH'))->toBe('/existing/path');
+});
+
 class FakeBladeEngine implements ViewEngine
 {
     /**
