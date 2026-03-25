@@ -10,7 +10,7 @@ use Spatie\Mjml\Mjml;
 class MJMLEngine implements Engine
 {
     /**
-     * @var \Closure(): \Spatie\Mjml\Mjml
+     * @var Closure(): Mjml
      */
     private Closure $mjmlFactory;
 
