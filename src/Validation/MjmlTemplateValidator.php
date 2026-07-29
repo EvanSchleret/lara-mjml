@@ -34,15 +34,25 @@ final class MjmlTemplateValidator
             );
         }
 
-        $errors = array_map(
-            static fn (MjmlError $error): string => $error->formattedMessage(),
+        $issues = array_map(
+            static fn (MjmlError $error): MjmlTemplateValidationIssue => new MjmlTemplateValidationIssue(
+                line: $error->line(),
+                message: $error->message(),
+                tagName: $error->tagName(),
+            ),
             $result->errors(),
+        );
+
+        $errors = array_map(
+            static fn (MjmlTemplateValidationIssue $issue): string => $issue->formattedMessage(),
+            $issues,
         );
 
         return new MjmlTemplateValidationResult(
             path: $path,
             passed: $errors === [],
             errors: $errors,
+            issues: $issues,
         );
     }
 }

@@ -50,6 +50,11 @@ it('returns mjml validation errors when conversion returns errors', function () 
     expect($result->errors)->toBe([
         'Line 7: Element mj-column cannot be empty',
     ]);
+    expect($result->issues[0]->toArray())->toBe([
+        'line' => 7,
+        'message' => 'Element mj-column cannot be empty',
+        'tag' => 'mj-column',
+    ]);
     expect($result->exceptionMessage)->toBeNull();
     expect($fakeMjml->lastValidationLevel)->toBe(ValidationLevel::Soft);
 });
