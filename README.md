@@ -263,6 +263,35 @@ php artisan laramjml:validate --validation=soft
 
 The command returns a non-zero exit code when at least one template fails validation, so it is ready for CI workflows.
 
+### Validation output formats
+
+The default table output remains unchanged. Use JSON output when another tool needs structured validation results:
+
+```bash
+php artisan laramjml:validate --format=json
+```
+
+Use GitHub workflow annotations to display MJML errors directly on changed files in GitHub Actions:
+
+```bash
+php artisan laramjml:validate --format=github
+```
+
+JSON results include the template path, validation status, formatted errors, and structured issues with their line and MJML tag.
+
+### Render Blade before validation
+
+Use `--render` to render Blade directives and expressions before passing the result to MJML. The option is useful for templates that contain Blade syntax:
+
+```bash
+php artisan laramjml:validate \
+  --path=resources/views/emails \
+  --render \
+  --data='{"userName":"Ada"}'
+```
+
+The `--data` option accepts a JSON object and defaults to an empty object. Without `--render`, the command keeps validating the original template source as in previous versions.
+
 ## Roadmap
 
 - [ ] Add an optional Artisan install command (`laramjml:install`) to publish config in one step
