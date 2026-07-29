@@ -226,6 +226,31 @@ LARA_MJML_MINIFY=true
 LARA_MJML_KEEP_COMMENTS=false
 ```
 
+## Rendering events
+
+LaraMJML dispatches lifecycle events when a MJML Blade view is rendered:
+
+- `EvanSchleret\LaraMjml\Events\MjmlRendering` before rendering starts
+- `EvanSchleret\LaraMjml\Events\MjmlRendered` after a successful conversion
+- `EvanSchleret\LaraMjml\Events\MjmlRenderingFailed` when Blade or MJML throws an exception
+
+The events expose the view path, the detected MJML version when available, the validation level, and the rendering duration in milliseconds on completed or failed renders. Successful renders also expose structured MJML validation errors. Failed renders expose the original exception and the failing phase (`blade` or `mjml`). Template data and generated HTML are never included in the event payload.
+
+The existing exception behavior is preserved: failed renders continue to throw the original exception after dispatching `MjmlRenderingFailed`.
+
+```php
+use EvanSchleret\LaraMjml\Events\MjmlRendered;
+use Illuminate\Support\Facades\Event;
+
+Event::listen(MjmlRendered::class, function (MjmlRendered $event): void {
+    logger()->info('MJML view rendered', [
+        'path' => $event->path,
+        'duration_ms' => $event->durationMs,
+        'mjml_version' => $event->mjmlVersion,
+    ]);
+});
+```
+
 ## Troubleshooting
 
 - Empty or broken HTML: ensure only the layout contains `<mjml>` and `<mj-body>`
