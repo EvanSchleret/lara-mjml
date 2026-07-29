@@ -2,6 +2,7 @@
 
 namespace EvanSchleret\LaraMjml\Providers;
 
+use EvanSchleret\LaraMjml\Commands\MjmlDoctorCommand;
 use EvanSchleret\LaraMjml\Commands\ValidateMjmlCommand;
 use EvanSchleret\LaraMjml\Views\Engines\MJMLEngine;
 use Illuminate\Support\Facades\View;
@@ -28,6 +29,7 @@ class LaraMjmlServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                MjmlDoctorCommand::class,
                 ValidateMjmlCommand::class,
             ]);
         }
