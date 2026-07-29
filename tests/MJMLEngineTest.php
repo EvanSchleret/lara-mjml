@@ -1,8 +1,12 @@
 <?php
 
+use EvanSchleret\LaraMjml\Events\MjmlRendered;
+use EvanSchleret\LaraMjml\Events\MjmlRendering;
+use EvanSchleret\LaraMjml\Events\MjmlRenderingFailed;
 use EvanSchleret\LaraMjml\Views\Engines\MJMLEngine;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\View\Engine as ViewEngine;
+use Illuminate\Events\Dispatcher;
 use Spatie\Mjml\Mjml;
 use Spatie\Mjml\MjmlResult;
 
@@ -39,6 +43,93 @@ it('converts rendered mjml from the underlying blade engine', function () {
     expect($fakeMjml->convertCalls)->toHaveCount(1);
     expect($fakeMjml->convertCalls[0]['mjml'])->toContain('Hello');
     expect($fakeMjml->convertCalls[0]['options'])->toBe([]);
+});
+
+it('dispatches rendering lifecycle events', function () {
+    $events = new Dispatcher;
+    $rendering = null;
+    $rendered = null;
+
+    $events->listen(MjmlRendering::class, function (MjmlRendering $event) use (&$rendering): void {
+        $rendering = $event;
+    });
+    $events->listen(MjmlRendered::class, function (MjmlRendered $event) use (&$rendered): void {
+        $rendered = $event;
+    });
+
+    $engine = new MJMLEngine(
+        new FakeBladeEngine(fn (): string => '<mjml></mjml>'),
+        $this->config,
+        fn (): FakeMjml => new FakeMjml('<html />', [
+            ['line' => 4, 'message' => 'MJML warning', 'tagName' => 'mj-text'],
+        ]),
+        $events,
+        fn (?string $binaryPath): string => '5.4.0',
+    );
+
+    expect($engine->get('emails/invite.mjml.blade.php'))->toBe('<html />');
+    expect($rendering)->toBeInstanceOf(MjmlRendering::class);
+    expect($rendering->path)->toBe('emails/invite.mjml.blade.php');
+    expect($rendering->mjmlVersion)->toBe('5.4.0');
+    expect($rendering->validationLevel)->toBe('soft');
+    expect($rendered)->toBeInstanceOf(MjmlRendered::class);
+    expect($rendered->path)->toBe('emails/invite.mjml.blade.php');
+    expect($rendered->durationMs)->toBeGreaterThanOrEqual(0.0);
+    expect($rendered->mjmlVersion)->toBe('5.4.0');
+    expect($rendered->validationLevel)->toBe('soft');
+    expect($rendered->errors)->toBe([
+        ['line' => 4, 'message' => 'MJML warning', 'tagName' => 'mj-text'],
+    ]);
+});
+
+it('dispatches a failure event when blade rendering fails', function () {
+    $events = new Dispatcher;
+    $failed = null;
+
+    $events->listen(MjmlRenderingFailed::class, function (MjmlRenderingFailed $event) use (&$failed): void {
+        $failed = $event;
+    });
+
+    $engine = new MJMLEngine(
+        new FakeBladeEngine(fn (): string => throw new RuntimeException('Blade failed')),
+        $this->config,
+        fn (): FakeMjml => new FakeMjml('<html />'),
+        $events,
+        fn (?string $binaryPath): string => '5.4.0',
+    );
+
+    expect(fn () => $engine->get('emails/invite.mjml.blade.php'))
+        ->toThrow(RuntimeException::class, 'Blade failed');
+    expect($failed)->toBeInstanceOf(MjmlRenderingFailed::class);
+    expect($failed->path)->toBe('emails/invite.mjml.blade.php');
+    expect($failed->durationMs)->toBeGreaterThanOrEqual(0.0);
+    expect($failed->mjmlVersion)->toBe('5.4.0');
+    expect($failed->validationLevel)->toBe('soft');
+    expect($failed->phase)->toBe('blade');
+    expect($failed->exception)->toBeInstanceOf(RuntimeException::class);
+});
+
+it('dispatches a failure event when mjml conversion fails', function () {
+    $events = new Dispatcher;
+    $failed = null;
+
+    $events->listen(MjmlRenderingFailed::class, function (MjmlRenderingFailed $event) use (&$failed): void {
+        $failed = $event;
+    });
+
+    $engine = new MJMLEngine(
+        new FakeBladeEngine(fn (): string => '<mjml></mjml>'),
+        $this->config,
+        fn (): FailingMjml => new FailingMjml,
+        $events,
+        fn (?string $binaryPath): string => '5.4.0',
+    );
+
+    expect(fn () => $engine->get('emails/invite.mjml.blade.php'))
+        ->toThrow(RuntimeException::class, 'MJML failed');
+    expect($failed)->toBeInstanceOf(MjmlRenderingFailed::class);
+    expect($failed->phase)->toBe('mjml');
+    expect($failed->exception->getMessage())->toBe('MJML failed');
 });
 
 it('respects mjml configuration options', function () {
@@ -143,6 +234,7 @@ class FakeMjml extends Mjml
 
     public function __construct(
         private string $htmlToReturn,
+        private array $errors = [],
     ) {
         parent::__construct();
     }
@@ -175,7 +267,20 @@ class FakeMjml extends Mjml
         return new MjmlResult([
             'html' => $this->htmlToReturn,
             'json' => [],
-            'errors' => [],
+            'errors' => $this->errors,
         ]);
+    }
+}
+
+class FailingMjml extends FakeMjml
+{
+    public function __construct()
+    {
+        parent::__construct('');
+    }
+
+    public function convert(string $mjml, array $options = []): MjmlResult
+    {
+        throw new RuntimeException('MJML failed');
     }
 }

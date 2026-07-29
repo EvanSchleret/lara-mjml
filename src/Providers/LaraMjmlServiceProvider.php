@@ -38,6 +38,8 @@ class LaraMjmlServiceProvider extends ServiceProvider
             return new MJMLEngine(
                 View::getEngineResolver()->resolve('blade'),
                 $this->app['config'],
+                null,
+                $this->app['events'],
             );
         });
 
