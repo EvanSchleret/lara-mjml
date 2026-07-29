@@ -9,5 +9,6 @@ final class MjmlTemplateValidationResult
         public readonly bool $passed,
         public readonly array $errors = [],
         public readonly ?string $exceptionMessage = null,
+        public readonly array $issues = [],
     ) {}
 }
