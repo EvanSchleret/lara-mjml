@@ -3,6 +3,7 @@
     "mjml": "^5.4.0"
   },
   "overrides": {
+    "brace-expansion": "5.0.12",
     "cross-spawn": "7.0.6",
     "editorconfig": "3.0.2",
     "glob": "11.1.0",
