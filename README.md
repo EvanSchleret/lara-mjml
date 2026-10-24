@@ -54,6 +54,23 @@ Publish the package config (optional):
 php artisan vendor:publish --provider="EvanSchleret\LaraMjml\Providers\LaraMjmlServiceProvider"
 ```
 
+Or install the configuration, layout and example Mailable in one command:
+
+```bash
+php artisan laramjml:install
+```
+
+Use `--without-examples` to generate only the configuration and layout, or `--force` to replace existing generated files.
+
+The installer creates:
+
+```text
+config/laramjml.php
+resources/views/layouts/mjml.blade.php
+app/Mail/ExampleMail.php
+resources/views/emails/example.mjml.blade.php
+```
+
 ## Quick start
 
 Create an MJML layout:
@@ -94,26 +111,72 @@ resources/views/emails/welcome.blade.php
 
 ## Blade file rules
 
-Use this hierarchy to avoid malformed MJML:
+LaraMJML supports two view conventions. In both cases, the layout contains `<mjml>` and `<mj-body>`, and its filename ends in `.mjml.blade.php`.
 
-- the layout contains `<mjml>` and `<mj-body>`
-- the layout filename includes `.mjml.blade.php`
-- child views extend the MJML layout
-- child views do not include `.mjml` in the filename
+### Blade views inside an MJML layout
 
-Correct:
+Use a regular `.blade.php` view when the view extends an MJML layout:
 
 ```text
 resources/views/layouts/base.mjml.blade.php
 resources/views/emails/welcome.blade.php
 ```
 
-Incorrect:
+The child view uses Blade inheritance and contains MJML components inside its sections, as shown in the Quick start example.
+
+### Direct MJML Blade views
+
+Use `.mjml.blade.php` when the view itself should use the MJML view engine. The generators create this type of view and extend the generated `layouts.mjml` layout:
 
 ```text
-resources/views/layouts/base.mjml.blade.php
-resources/views/emails/welcome.mjml.blade.php
+resources/views/layouts/mjml.blade.php
+resources/views/emails/example.mjml.blade.php
 ```
+
+Pass the view name without its file extension to a Mailable or Notification, for example `emails.example`. Both conventions are supported; choose the one that matches how the view is structured.
+
+## Generate a Mailable
+
+Generate a Mailable, its MJML view and the shared layout:
+
+```bash
+php artisan laramjml:make:mail WelcomeMail
+```
+
+Customize the view name with `--view` or replace existing files with `--force`:
+
+```bash
+php artisan laramjml:make:mail WelcomeMail --view=emails.welcome --force
+```
+
+## Generate a Notification
+
+Generate a Notification, its MJML view and the shared layout:
+
+```bash
+php artisan laramjml:make:notification InvoicePaid
+```
+
+The generated notification uses the mail channel and is immediately usable with `Notifiable` models.
+
+## Preview a view locally
+
+Render a view, convert its MJML to HTML and open the result in the default browser:
+
+```bash
+php artisan laramjml:preview emails.example --data='{"name":"John"}'
+```
+
+Save the preview at a specific path:
+
+```bash
+php artisan laramjml:preview emails.example \
+  --data='{"name":"John"}' \
+  --output=storage/app/mjml-preview.html \
+  --no-open
+```
+
+Use `--no-open` to skip browser opening. Without `--output`, the command writes the HTML to a temporary file.
 
 ## Use with Mailable
 
