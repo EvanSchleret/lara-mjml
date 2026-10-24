@@ -17,6 +17,7 @@
         "php": "^8.2 || ^8.3 || ^8.4 || ^8.5",
         "illuminate/config": "^12.60|^13.10",
         "illuminate/console": "^12.60|^13.10",
+        "illuminate/filesystem": "^12.60|^13.10",
         "illuminate/support": "^12.60|^13.10",
         "illuminate/view": "^12.60|^13.10",
         "illuminate/mail": "^12.60|^13.10",

@@ -2,7 +2,11 @@
 
 namespace EvanSchleret\LaraMjml\Providers;
 
+use EvanSchleret\LaraMjml\Commands\MakeMjmlMailCommand;
+use EvanSchleret\LaraMjml\Commands\MakeMjmlNotificationCommand;
 use EvanSchleret\LaraMjml\Commands\MjmlDoctorCommand;
+use EvanSchleret\LaraMjml\Commands\MjmlInstallCommand;
+use EvanSchleret\LaraMjml\Commands\MjmlPreviewCommand;
 use EvanSchleret\LaraMjml\Commands\ValidateMjmlCommand;
 use EvanSchleret\LaraMjml\Views\Engines\MJMLEngine;
 use Illuminate\Support\Facades\View;
@@ -30,6 +34,10 @@ class LaraMjmlServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 MjmlDoctorCommand::class,
+                MjmlInstallCommand::class,
+                MakeMjmlMailCommand::class,
+                MakeMjmlNotificationCommand::class,
+                MjmlPreviewCommand::class,
                 ValidateMjmlCommand::class,
             ]);
         }
