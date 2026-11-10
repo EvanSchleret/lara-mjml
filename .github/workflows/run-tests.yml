@@ -17,7 +17,6 @@ jobs:
             laravel: '13.*'
     env:
       APP_ENV: testing
-      MJML_NODE_PATH: null
 
     steps:
       - uses: actions/checkout@v4
@@ -60,13 +59,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install mjml CLI
-        run: npm i -g mjml
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.4'
+
+      - name: Install MJML dependencies
+        run: bun install --frozen-lockfile
 
       - name: Sanity check mjml
-        run: mjml --version
+        run: node -p "require('mjml/package.json').version"
 
       - name: Run tests (Pest)
-        run: |
-          php -v
-          ./vendor/bin/pest -v || ./vendor/bin/phpunit -v
+        run: ./vendor/bin/pest -v
