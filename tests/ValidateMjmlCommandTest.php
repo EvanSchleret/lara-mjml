@@ -118,6 +118,8 @@ it('renders Blade before validating when requested', function () {
     $path = validationTemplatePath();
     $application = new ValidationCommandTestApplication;
     $application->instance('view', new FakeCommandViewFactory);
+    FakeCommandValidationMjml::$lastMjml = null;
+    Facade::clearResolvedInstances();
     Facade::setFacadeApplication($application);
 
     $validator = new MjmlTemplateValidator(fn (): Mjml => new FakeCommandValidationMjml);
