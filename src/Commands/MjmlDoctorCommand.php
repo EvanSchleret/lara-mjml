@@ -166,8 +166,10 @@ class MjmlDoctorCommand extends Command
 
     private function applicationBasePath(): string
     {
-        if (function_exists('base_path')) {
-            return base_path();
+        $application = $this->getLaravel();
+
+        if (is_object($application) && method_exists($application, 'basePath')) {
+            return $application->basePath();
         }
 
         return getcwd() ?: '.';
